@@ -16,9 +16,20 @@ dependencies {
     implementation("com.github.ajalt.mordant:mordant-coroutines:3.0.2")
 }
 
+tasks.jar {
+    manifest.attributes["Main-Class"] = "org.example.MainKt"
+    val dependencies = configurations
+        .runtimeClasspath
+        .get()
+        .map { zipTree(it) }
+    from(dependencies)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(21)
 }

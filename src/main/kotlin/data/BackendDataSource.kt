@@ -6,10 +6,10 @@ object BackendDataSource : DataSource() {
         "/api/v2/"
     )
 
-    override val process: List<Pair<String, String?>> = listOf(
-        Pair("pre-caching endpoints", null),
-        Pair("updating docker containers", null),
-        Pair("checking for vulnerabilities", null),
+    override val process: List<Process> = listOf(
+        Process("pre-caching endpoints", null),
+        Process("updating docker containers", null),
+        Process("checking for vulnerabilities", null),
     )
 
     override val softJargon: List<String>
