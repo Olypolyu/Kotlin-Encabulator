@@ -1,5 +1,6 @@
 package org.example
 
+import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.terminal.Terminal
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -13,12 +14,12 @@ private enum class LogLevel {
 
 private fun Terminal.log(level: LogLevel, message: String) {
     val style = when (level) {
-        LogLevel.INFO -> theme.success("INFO")
+        LogLevel.INFO -> theme.success ("INFO")
         LogLevel.WARN -> theme.warning("WARN")
         LogLevel.ERROR -> theme.danger("ERROR")
     }
 
-    this.println("$timestamp [$style] $message")
+    this.println("$timestamp [${TextStyles.bold(style)}] $message")
 }
 
 fun Terminal.info(message: String) = log(LogLevel.INFO, message)

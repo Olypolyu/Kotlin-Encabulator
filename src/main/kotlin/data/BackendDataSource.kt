@@ -1,26 +1,88 @@
 package org.example.data
 
-object BackendDataSource : DataSource() {
+import com.github.ajalt.mordant.terminal.Terminal
 
-    override val networkEndpoints: List<String> = listOf(
-        "/api/v2/"
+class BackendDataSource(terminal: Terminal) : DataSource(terminal) {
+    override val fileExtension: List<String> = listOf(
+        "ts",
+        "js",
+        "kt",
+        "java",
+        "scala",
+        "groovy",
     )
 
-    override val process: List<Process> = listOf(
-        Process("pre-caching endpoints", null),
-        Process("updating docker containers", null),
-        Process("checking for vulnerabilities", null),
+    override val envInitLines: List<String> = listOf(
+        "Loading Configuration files...",
+        "Syncing with remotes...",
+        "Downloading Libraries...",
+        "Validating Security Certificates...",
+        "Connecting to Database Server...",
+        "Initializing Modules...",
+        terminal.theme.success("✅ Project Initialization Complete.")
     )
 
-    override val softJargon: List<String>
-        get() = TODO("Not yet implemented")
+    override val classNamePrefix: List<String> = listOf(
+        "account",
+        "user",
+        "store",
+        "notification",
+        "product",
+        "asset",
+        "internationalization",
+        "data"
+    )
 
-    override val mediumJargon: List<String>
-        get() = TODO("Not yet implemented")
+    override val classNameSuffix: List<String> = listOf(
+        "Model",
+        "Controller",
+        "Manager",
+        "Factory",
+        "Queue",
+        "Adapter",
+        "Repository",
+        "Prototype",
+    )
+    override val analysis: List<Analysis> = listOf(
 
-    override val hardJargon: List<String>
-        get() = TODO("Not yet implemented")
+        Analysis("Linter::Nesting Depth", (0..10)) {
+            when (it) {
+                in 0..3 -> Pair("good", true)
+                in 4..6 -> Pair("okay", true)
+                else    -> Pair("poor", false)
+            }
+        },
 
-    override val boiledJargon: List<String>
-        get() = TODO("Not yet implemented")
+        Analysis("Linter::Code Quality", (0..100)) {
+            when (it) {
+                in 0..25 -> Pair("bad", false)
+                in 26..50 -> Pair("poor", false)
+                in 51..75 -> Pair("fine", true)
+                in 76..100 -> Pair("good", true)
+
+                else    -> Pair("", false)
+            }
+        },
+
+        Analysis("Memory Usage", 0..4096, "MB") {
+            when (it) {
+                in 0..255 -> Pair("great", true)
+                in 255..555 -> Pair("good", true)
+                in 555..2048 -> Pair("fine", true)
+                in 2048..3072 -> Pair("poor", false)
+                in 3072..4096 -> Pair("bad", false)
+
+                else    -> Pair("", false)
+            }
+        }
+
+    )
+
+    override val analysisResults: List<() -> String> = listOf(
+        {"Issues found: ${(0..10).random()}"},
+        {"Code Quality: ${(75..100).random()}%"},
+        {"Technical Depth: ${(0..10).random()}%"}
+    )
+
+
 }
