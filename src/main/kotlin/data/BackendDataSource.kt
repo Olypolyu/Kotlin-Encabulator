@@ -81,8 +81,7 @@ class BackendDataSource(terminal: Terminal) : DataSource(terminal) {
     override val analysisResults: List<() -> String> = listOf(
         {"Issues found: ${(0..10).random()}"},
         {"Code Quality: ${(75..100).random()}%"},
-        {"Technical Depth: ${(0..10).random()}%"}
+        {"Technical Debt: ${(0..10).random()}%"}
     )
-
 
 }

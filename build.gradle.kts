@@ -1,9 +1,12 @@
-plugins {
-    kotlin("jvm") version "2.1.10"
-}
+val entryPoint = "org.example.MainKt"
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
+
+plugins {
+    kotlin("jvm") version "2.1.10"
+    id("org.graalvm.buildtools.native") version "0.10.6"
+}
 
 repositories {
     mavenCentral()
@@ -17,7 +20,7 @@ dependencies {
 }
 
 tasks.jar {
-    manifest.attributes["Main-Class"] = "org.example.MainKt"
+    manifest.attributes["Main-Class"] = entryPoint
     val dependencies = configurations
         .runtimeClasspath
         .get()
@@ -26,10 +29,19 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+tasks.test { useJUnitPlatform() }
+kotlin { jvmToolchain(21) }
 
-kotlin {
-    jvmToolchain(21)
+graalvmNative {
+    binaries {
+        named("main") {
+            mainClass.set(entryPoint)
+
+            javaLauncher.set(
+                javaToolchains.launcherFor {
+                    languageVersion.set(JavaLanguageVersion.of(21))
+                }
+            )
+        }
+    }
 }

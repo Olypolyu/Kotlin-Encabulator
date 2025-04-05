@@ -25,7 +25,6 @@ abstract class DataSource(private val terminal: Terminal) {
         {monitorSystemResources()}
     )
 
-
     abstract val envInitLines: List<String>
 
     suspend fun initEnvironment() = coroutineScope {
@@ -115,8 +114,8 @@ abstract class DataSource(private val terminal: Terminal) {
 
         val progress = progressBarLayout {
             spinner(Spinner.Dots())
-            timeElapsed()
             progressBar()
+            timeElapsed()
         }.animateInCoroutine(terminal)
 
         progress.update { this.total = 10 }
@@ -126,10 +125,10 @@ abstract class DataSource(private val terminal: Terminal) {
         while (!progress.finished) {
             terminal.info(
                 listOf(
-                    "CPU: ${(0..100).random()}%".padEnd(16),
-                    "RAM: ${(0..100).random()}%".padEnd(16),
-                    "NETWORK: ${(0..100).random()}%".padEnd(16),
-                    "DISK: ${(0..100).random()}%".padEnd(16),
+                    "CPU: ${(0..100).random()}%".padEnd(9),
+                    "RAM: ${(0..100).random()}%".padEnd(9),
+                    "NETWORK: ${(0..100).random()}%".padEnd(13),
+                    "DISK: ${(0..100).random()}%".padEnd(10),
                     "PROCESSES: $processes".padEnd(16),
                 ).joinToString(" | ")
             )
