@@ -38,8 +38,8 @@ abstract class DataSource {
             if (suffix != null) speed(suffix, style = terminal.theme.info)
         }.animateInCoroutine(terminal)
 
-        progress.update { total = 100 }
         launch { progress.execute() }
+        progress.update { total = 100 }
 
         while (!progress.finished) {
             progress.advance(1)

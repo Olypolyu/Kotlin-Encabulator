@@ -1,11 +1,13 @@
 package org.example
 
 import com.github.ajalt.mordant.terminal.Terminal
-import java.text.SimpleDateFormat
-import java.util.Date
+import kotlinx.datetime.*
+import kotlinx.datetime.format.*
 
-private val timestamp: String
-    get() = SimpleDateFormat("hh:mm:ss.SSS").format(Date())
+@OptIn(FormatStringsInDatetimeFormats::class)
+val timeFormat = LocalTime.Format { byUnicodePattern("HH:mm:ss.SSS") }
+private val time get() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time
+private val timestamp get() = timeFormat.format(time)
 
 private enum class LogLevel {
     INFO, WARN, ERROR;
