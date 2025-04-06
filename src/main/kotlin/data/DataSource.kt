@@ -73,7 +73,6 @@ abstract class DataSource(private val terminal: Terminal) {
 
     suspend fun codeAnalysis() = coroutineScope {
         terminal.info((TextColors.cyan + TextStyles.bold)("🔎 - Running Code Analysis on API Components"))
-        println(" ")
 
         val total = (5..26).random()
         val progress = progressBarLayout {
@@ -113,7 +112,6 @@ abstract class DataSource(private val terminal: Terminal) {
 
     suspend fun monitorSystemResources() = coroutineScope {
         terminal.info((TextColors.brightMagenta + TextStyles.bold)("💽️ - Monitoring System Resources"))
-        println(" ")
 
         val progress = progressBarLayout {
             spinner(Spinner.Dots())
@@ -167,8 +165,8 @@ abstract class DataSource(private val terminal: Terminal) {
     abstract val apiEndpoints: List<String>
     suspend fun analyzeAPIEndpoints() = coroutineScope{
         terminal.info((TextColors.brightCyan + TextStyles.bold)("🕸️ - Analyzing API Traffic"))
-        println(" ")
 
+        val itr = apiEndpoints.shuffled().iterator()
         val maxPadding = apiEndpoints.max().length
         val methods: List<String> = listOf(
             TextColors.brightGreen("GET"),
@@ -184,7 +182,7 @@ abstract class DataSource(private val terminal: Terminal) {
             timeElapsed()
         }.animateInCoroutine(terminal)
 
-        progress.update { this.total = (10..15).random().toLong() }
+        progress.update { this.total = ((if(apiEndpoints.size > 7) 5 else 0)..min(apiEndpoints.size, 15)).random().toLong()}
         val job = launch { progress.execute() }
 
         while (!progress.finished) {
@@ -203,7 +201,7 @@ abstract class DataSource(private val terminal: Terminal) {
             }
 
             val method = methods.random().padEnd(16, ' ')
-            val endpoint = apiEndpoints.random().padEnd(8 + maxPadding)
+            val endpoint = itr.next().padEnd(8 + maxPadding)
             val ms = "${(72..1000).random()}ms".padEnd(5)
             val size = "${(225..1000).random()}KB".padEnd(5)
             terminal.info("$method $endpoint -> $numStr | $ms | $size")
@@ -216,7 +214,7 @@ abstract class DataSource(private val terminal: Terminal) {
         println(" ")
         terminal.info(
             """
-            ${TextColors.cyan("📊 Network Activity Summary:")}
+            ${TextColors.cyan("📊 - Network Activity Summary:")}
                 - Total requests: ${(0..1000).random()}
                 - Average response time: ${(0..100).random()} ms
                 - Success rate: ${(0..100).random()}%
