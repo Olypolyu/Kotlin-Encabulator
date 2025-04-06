@@ -30,7 +30,8 @@ class BackendDataSource(terminal: Terminal) : DataSource(terminal) {
         "product",
         "asset",
         "internationalization",
-        "data"
+        "data",
+        "telemetry",
     )
 
     override val classNameSuffix: List<String> = listOf(
@@ -84,4 +85,17 @@ class BackendDataSource(terminal: Terminal) : DataSource(terminal) {
         {"Technical Debt: ${(0..10).random()}%"}
     )
 
+    override val apiEndpoints: List<String> = listOf(
+        "api/v2/internal/admin",
+        "api/v2/internal/dashboard",
+        "api/v2/bot",
+        "api/v2/users",
+        "api/v2/users/{id}",
+        "api/v2/auth",
+        "api/v2/auth/login",
+        "api/v2/repo/notify",
+        "api/v2/repo/updates",
+        "api/v2/telemetry",
+        "api/v2/content",
+    )
 }

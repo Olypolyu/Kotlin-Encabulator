@@ -5,9 +5,11 @@ import com.github.ajalt.mordant.animation.progress.advance
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.warning
 import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.progress.*
 import kotlinx.coroutines.*
+import org.example.error
 import org.example.info
 import org.example.warn
 import kotlin.math.min
@@ -22,7 +24,8 @@ abstract class DataSource(private val terminal: Terminal) {
 
     val tasks: List<suspend () -> Unit> = listOf(
         {codeAnalysis()},
-        {monitorSystemResources()}
+        {monitorSystemResources()},
+        {analyzeAPIEndpoints()},
     )
 
     abstract val envInitLines: List<String>
@@ -68,7 +71,6 @@ abstract class DataSource(private val terminal: Terminal) {
     protected val fileName: String
         get() = "${classNamePrefix.random()}${classNameSuffix.random()}.${fileExtension.random()}"
 
-
     suspend fun codeAnalysis() = coroutineScope {
         terminal.info((TextColors.cyan + TextStyles.bold)("🔎 - Running Code Analysis on API Components"))
         println(" ")
@@ -90,8 +92,9 @@ abstract class DataSource(private val terminal: Terminal) {
             val num = a.range.random()
             val (label, isGood) = a.labelFn(num)
 
-            if (isGood) terminal.info("✅ - $fileName - ${a.name}: $num ($label)")
-            else terminal.warn("⚠️ - $fileName - ${a.name}: $num ($label)")
+            val str = "$fileName - ${a.name}: $num${a.suffix} ($label)"
+            if (isGood) terminal.info("✅ - $str") else terminal.warn("⚠️ - $str")
+
             delay((10..700).random().toLong())
             progress.advance(1)
         }
@@ -153,4 +156,75 @@ abstract class DataSource(private val terminal: Terminal) {
 
         println(" ")
     }
+
+    val statusCodes: List<Int> = listOf(
+        200, 201, 204, // 2xx Success
+        301, 302, 304, // 3xx Redirection
+        400, 401, 403, 404, 422, 429, // 4xx Client Error
+        500, 502, 503, 504, // 5xx Server Error
+    )
+
+    abstract val apiEndpoints: List<String>
+    suspend fun analyzeAPIEndpoints() = coroutineScope{
+        terminal.info((TextColors.brightCyan + TextStyles.bold)("🕸️ - Analyzing API Traffic"))
+        println(" ")
+
+        val maxPadding = apiEndpoints.max().length
+        val methods: List<String> = listOf(
+            TextColors.brightGreen("GET"),
+            TextColors.brightRed("DELETE"),
+            TextColors.brightBlue("POST"),
+            TextColors.brightMagenta("PATCH"),
+            TextColors.brightYellow("PUT"),
+        )
+
+        val progress = progressBarLayout {
+            spinner(Spinner.Dots())
+            progressBar()
+            timeElapsed()
+        }.animateInCoroutine(terminal)
+
+        progress.update { this.total = (10..15).random().toLong() }
+        val job = launch { progress.execute() }
+
+        while (!progress.finished) {
+            val num = when ((1..10).random()) {
+                in 1..6 -> statusCodes[(0..2).random()]
+                7 -> statusCodes[(3..5).random()]
+                8 -> statusCodes[(12..15).random()]
+                in 9..10 -> statusCodes[(6..11).random()]
+                else -> 0
+            }
+
+            val numStr:String = when {
+                num >= 400 -> terminal.theme.danger(num.toString())
+                num >= 300  -> terminal.theme.warning(num.toString())
+                else -> terminal.theme.success(num.toString())
+            }
+
+            val method = methods.random().padEnd(16, ' ')
+            val endpoint = apiEndpoints.random().padEnd(8 + maxPadding)
+            val ms = "${(72..1000).random()}ms".padEnd(5)
+            val size = "${(225..1000).random()}KB".padEnd(5)
+            terminal.info("$method $endpoint -> $numStr | $ms | $size")
+
+            delay((10..800).random().toLong())
+            progress.advance(1)
+        }
+
+        job.join()
+        println(" ")
+        terminal.info(
+            """
+            ${TextColors.cyan("📊 Network Activity Summary:")}
+                - Total requests: ${(0..1000).random()}
+                - Average response time: ${(0..100).random()} ms
+                - Success rate: ${(0..100).random()}%
+                - Bandwidth utilization: ${(20..200).random()} MB/s
+            """.trimIndent()
+        )
+
+        println(" ")
+    }
+
 }
