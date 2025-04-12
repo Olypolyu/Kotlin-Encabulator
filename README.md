@@ -31,5 +31,7 @@ Simply Copy of the commands directly in your console to install the program. Ver
 ### Windows
 
 ### Linux
-`curl https://raw.githubusercontent.com/Olypolyu/Kotlin-Encabulator/master/script/install-linux.sh | sh`
+```sh
+curl https://raw.githubusercontent.com/Olypolyu/Kotlin-Encabulator/master/script/install-linux.sh | sh
+```
 ### Jar
