@@ -23,7 +23,7 @@ The Encabulator works by highjacking one simple concept of human psychology, via
 - Domain specific polymorphic debug prints 
 - ❤️ ***Kotlin.***
 
-## Instalation Instructions
+## Installation Instructions
 ---
 After years of work, the Kotlin Encabulator has reached a high level of development. As such, the instalation instructions for this **wonder technology** have been simplified drastically.
 Simply copy the command for your matching Operating System directly in a console window to install the program. Very secure, we know!
