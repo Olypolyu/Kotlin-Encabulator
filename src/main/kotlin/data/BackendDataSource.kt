@@ -1,8 +1,38 @@
 package org.example.data
 
 import com.github.ajalt.mordant.terminal.Terminal
+import org.example.JargonLevel
 
-class BackendDataSource(terminal: Terminal) : DataSource(terminal) {
+class BackendDataSource(terminal: Terminal, jargonLevel: JargonLevel, projectName: String, envName: String?) :
+    DataSource(terminal, jargonLevel, projectName, envName) {
+
+    override val envType: String = "Backend Development"
+    override val jargonMap: Map<JargonLevel, List<String>> = mapOf(
+        JargonLevel.SOFT to listOf(
+            "Adjusted response format for clarity",
+            "Simplified service layer to improve maintainability",
+            "Refactored controller endpoints for cleaner design"
+        ),
+
+        JargonLevel.MEDIUM to listOf(
+            "Streamlined middleware for seamless request parsing",
+            "Enhanced caching layer to reduce redundant DB lookups",
+            "Tuned service orchestration for balanced load distribution"
+        ),
+
+        JargonLevel.HARD to listOf(
+            "Optimized API handler for polylogarithmic asymptotic scaling on big data retrieval daemon",
+            "Refactored microservice interfacing to leverage reactive streams for non-blocking I/O",
+            "Integrated stochastic load balancing with dynamic circuit breaker patterns"
+        ),
+
+        JargonLevel.BOILED to listOf(
+            "Rearchitected backend with a distributed task-scheduling paradigm to achieve kernel-level concurrency",
+            "Implemented an elastic, containerized orchestration framework leveraging advanced consensus algorithms",
+            "Engineered a hyper-threaded, low-level memory-managed daemon to balance real-time transactional throughput"
+        )
+    )
+
     override val fileExtension: List<String> = listOf(
         "ts",
         "js",

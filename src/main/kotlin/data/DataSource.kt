@@ -5,11 +5,10 @@ import com.github.ajalt.mordant.animation.progress.advance
 import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.terminal.Terminal
-import com.github.ajalt.mordant.terminal.warning
 import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.progress.*
 import kotlinx.coroutines.*
-import org.example.error
+import org.example.JargonLevel
 import org.example.info
 import org.example.warn
 import kotlin.math.min
@@ -19,7 +18,14 @@ data class Process(val text: String, val suffix: String?)
 
 data class Analysis(val name: String, val range: IntRange, val suffix:String = "", val labelFn: (Int) -> Pair<String, Boolean>)
 
-abstract class DataSource(private val terminal: Terminal) {
+abstract class DataSource(
+    val terminal: Terminal,
+    val jargonLevel: JargonLevel,
+    val projectName: String,
+    val envName: String?,
+)
+
+{
     abstract val fileExtension: List<String>
 
     val tasks: List<suspend () -> Unit> = listOf(
@@ -28,7 +34,12 @@ abstract class DataSource(private val terminal: Terminal) {
         {analyzeAPIEndpoints()},
     )
 
+    abstract val envType: String
     abstract val envInitLines: List<String>
+
+    abstract val jargonMap: Map<JargonLevel, List<String>>
+
+    fun fetchJargon(): String? = jargonMap[jargonLevel]?.random()
 
     suspend fun initEnvironment() = coroutineScope {
         val stuffToPrint = envInitLines.iterator()
@@ -36,11 +47,13 @@ abstract class DataSource(private val terminal: Terminal) {
         terminal.info(
             """
             ${(TextColors.brightYellow + TextStyles.bold)("🖥️ - Initializing Development Environment")}
-                - Project: ${terminal.theme.success("Project")}
-                - Environment: ${terminal.theme.success("Backend Development")}
+                - Project: ${terminal.theme.success(projectName)}
+                - Environment: ${terminal.theme.success(envName ?: envType)}
                 
             """.trimIndent()
         )
+
+        delay(900)
 
         val progress = progressBarLayout {
             spinner(Spinner.Dots())
@@ -101,6 +114,7 @@ abstract class DataSource(private val terminal: Terminal) {
         val results = mutableListOf<String>()
         val resIt = analysisResults.shuffled().iterator()
         for (i in 1 .. min(analysisResults.size, (2..10).random())) results.add(resIt.next()())
+        fetchJargon()?.also { results.add(it) }
 
         job.join()
         println(" ")
