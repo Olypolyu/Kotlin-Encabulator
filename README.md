@@ -25,8 +25,8 @@ The Encabulator works by highjacking one simple concept of human psychology, via
 
 ## Instalation Instructions
 ---
-After years of work, the Kotlin Encabulator has reached a high level of development. As such, the instalation instructions for this wonder technology have been simplied drastically.
-Simply Copy of the commands directly in your console to install the program. Very secure, i know.
+After years of work, the Kotlin Encabulator has reached a high level of development. As such, the instalation instructions for this **wonder technology** have been simplified drastically.
+Simply copy the command for your matching Operating System directly in a console window to install the program. Very secure, we know!
 
 ### Windows
 
