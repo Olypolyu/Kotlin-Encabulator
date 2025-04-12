@@ -21,4 +21,15 @@ The Encabulator works by highjacking one simple concept of human psychology, via
 - Bi-dimensional value matrices
 - Linear space time dilatation measurements
 - Domain specific polymorphic debug prints 
-- ❤️ ***Kotlin.***  
+- ❤️ ***Kotlin.***
+
+## Instalation Instructions
+---
+After years of work, the Kotlin Encabulator has reached a high level of development. As such, the instalation instructions for this wonder technology have been simplied drastically.
+Simply Copy of the commands directly in your console to install the program. Very secure, i know.
+
+### Windows
+
+### Linux
+`curl https://raw.githubusercontent.com/Olypolyu/Kotlin-Encabulator/master/script/install-linux.sh | sh`
+### Jar
