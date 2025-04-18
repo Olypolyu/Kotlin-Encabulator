@@ -1,7 +1,7 @@
-package org.example.data
+package com.github.olypolyu.ktencabulator.data
 
 import com.github.ajalt.mordant.terminal.Terminal
-import org.example.JargonLevel
+import com.github.olypolyu.ktencabulator.JargonLevel
 
 class BackendDataSource(terminal: Terminal, jargonLevel: JargonLevel, projectName: String, envName: String?) :
     DataSource(terminal, jargonLevel, projectName, envName) {

@@ -1,4 +1,4 @@
-package org.example
+package com.github.olypolyu.ktencabulator
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.main
@@ -10,8 +10,8 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlinx.coroutines.runBlocking
-import org.example.data.BackendDataSource
-import org.example.data.DataSource
+import com.github.olypolyu.ktencabulator.data.BackendDataSource
+import com.github.olypolyu.ktencabulator.data.DataSource
 
 val environments: Array<String> = arrayOf(
     "backend"

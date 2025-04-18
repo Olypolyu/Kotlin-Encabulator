@@ -1,4 +1,4 @@
-package org.example.data
+package com.github.olypolyu.ktencabulator.data
 
 import com.github.ajalt.mordant.animation.coroutines.animateInCoroutine
 import com.github.ajalt.mordant.animation.progress.advance
@@ -8,9 +8,9 @@ import com.github.ajalt.mordant.terminal.Terminal
 import com.github.ajalt.mordant.widgets.Spinner
 import com.github.ajalt.mordant.widgets.progress.*
 import kotlinx.coroutines.*
-import org.example.JargonLevel
-import org.example.info
-import org.example.warn
+import com.github.olypolyu.ktencabulator.JargonLevel
+import com.github.olypolyu.ktencabulator.info
+import com.github.olypolyu.ktencabulator.warn
 import kotlin.math.min
 import kotlin.random.Random
 

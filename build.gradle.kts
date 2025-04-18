@@ -1,6 +1,6 @@
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "com.github.olypolyu.ktencabulator"
+version = "0.1.0"
 val entryPoint = "$group.MainKt"
 
 plugins {

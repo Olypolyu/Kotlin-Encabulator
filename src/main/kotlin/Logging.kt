@@ -1,4 +1,4 @@
-package org.example
+package com.github.olypolyu.ktencabulator
 
 import com.github.ajalt.mordant.rendering.TextStyles
 import com.github.ajalt.mordant.terminal.Terminal
