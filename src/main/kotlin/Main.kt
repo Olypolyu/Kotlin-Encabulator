@@ -7,12 +7,11 @@ import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.enum
+import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
 import kotlinx.coroutines.runBlocking
 import org.example.data.BackendDataSource
 import org.example.data.DataSource
-
-val terminal = Terminal()
 
 val environments: Array<String> = arrayOf(
     "backend"
@@ -36,11 +35,22 @@ class Application: CliktCommand() {
         .default(JargonLevel.MEDIUM)
         .help("Describes how hard the jargon will be to understand.")
 
+    private val ansiLevel: AnsiLevel? by option("-a", "--ansii")
+        .enum<AnsiLevel>()
+
     override fun run() = runBlocking {
         val sourceClass: Class<out DataSource> = when (environmentType) {
             "backend" -> BackendDataSource::class.java
-
             else -> throw UnknownError("\"$environmentType\" does not match a dataSource provider.")
+        }
+
+        val terminal = Terminal(
+            ansiLevel = ansiLevel
+        )
+
+        terminal.cursor.move {
+            setPosition(0,0)
+            clearScreen()
         }
 
         val source = sourceClass
@@ -52,11 +62,6 @@ class Application: CliktCommand() {
 }
 
 suspend fun encabulate(source: DataSource) {
-    terminal.cursor.move {
-        setPosition(0,0)
-        clearScreen()
-    }
-
     source.initEnvironment()
 
     while (true) {

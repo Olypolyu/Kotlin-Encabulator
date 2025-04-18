@@ -104,9 +104,7 @@ abstract class DataSource(
             val num = a.range.random()
             val (label, isGood) = a.labelFn(num)
 
-            val str = "$fileName - ${a.name}: $num${a.suffix} ($label)"
-            if (isGood) terminal.info("✅ - $str") else terminal.warn("⚠️ - $str")
-
+            terminal.println(" ${if(isGood) "✅" else "⚠️"} - $fileName - ${a.name}: $num${a.suffix} ($label)")
             delay((10..700).random().toLong())
             progress.advance(1)
         }
@@ -121,7 +119,6 @@ abstract class DataSource(
         terminal.info(TextColors.cyan("📊 - Analysis Results: $total files, ${total * (200..2000).random()} lines of code"))
         for (r in results) println("    - $r")
         println(" ")
-
     }
 
     suspend fun monitorSystemResources() = coroutineScope {
@@ -138,7 +135,7 @@ abstract class DataSource(
 
         var processes = (30..1000).random()
         while (!progress.finished) {
-            terminal.info(
+            terminal.println(
                 listOf(
                     "CPU: ${(0..100).random()}%".padEnd(9),
                     "RAM: ${(0..100).random()}%".padEnd(9),
@@ -149,7 +146,7 @@ abstract class DataSource(
             )
 
             processes += ((-100)..100).random()
-            delay(1000)
+            delay(250)
             progress.advance(1)
         }
 
@@ -218,7 +215,7 @@ abstract class DataSource(
             val endpoint = itr.next().padEnd(8 + maxPadding)
             val ms = "${(72..1000).random()}ms".padEnd(5)
             val size = "${(225..1000).random()}KB".padEnd(5)
-            terminal.info("$method $endpoint -> $numStr | $ms | $size")
+            terminal.println(" $method $endpoint -> $numStr | $ms | $size")
 
             delay((10..800).random().toLong())
             progress.advance(1)
