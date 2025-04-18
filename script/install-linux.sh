@@ -14,8 +14,8 @@ fi
 echo -e "\n> Downloading binary with curl...\n"
 curl -L -o "$HOME/.local/bin/kt-encabulator" "https://github.com/Olypolyu/Kotlin-Encabulator/releases/download/$LASTEST/kt-encabulator"
 chmod +x "$HOME/.local/bin/kt-encabulator"
+rm "$HOME/.local/bin/.kt-encabulator.version.txt"
+echo $LASTEST >> "$HOME/.local/bin/.kt-encabulator.version.txt"
 
 echo -e "\n\e[1;32mReady to go!\e[0m Execute with \"\e[1;34mkt-encabulator\e[0m\""
 echo "  - Run with -h or --help for documentation. \n"
-
-echo $LASTEST >> "$HOME/.local/bin/.kt-encabulator.version.txt"
