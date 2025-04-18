@@ -1,5 +1,5 @@
 #!/usr/bin/sh
-LASTEST="test"
+LASTEST="0.1.0"
 
 if [ -f "$HOME/.local/bin/kt-encabulator" ]; then
   echo -e "\n> Found existing binary in local bin. Do you wish to Continue? \e[1;34m(y/n)\e[0m"
@@ -17,3 +17,5 @@ chmod +x "$HOME/.local/bin/kt-encabulator"
 
 echo -e "\n\e[1;32mReady to go!\e[0m Execute with \"\e[1;34mkt-encabulator\e[0m\""
 echo "  - Run with -h or --help for documentation. \n"
+
+echo $LASTEST >> "$HOME/.local/bin/.kt-encabulator.version.txt"

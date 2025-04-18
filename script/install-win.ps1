@@ -1,4 +1,4 @@
-$latest = "test"
+$latest = "0.1.0"
 $binPath = "$env:USERPROFILE\.local\bin"
 $exePath = Join-Path $binPath "kt-encabulator.exe"
 
@@ -23,6 +23,7 @@ if (-Not (Test-Path -Path $binPath)) {
 
 Write-Host "`n> Downloading binary with Invoke-WebRequest..."
 Invoke-WebRequest -Uri "https://github.com/Olypolyu/Kotlin-Encabulator/releases/download/$latest/kt-encabulator.exe" -OutFile $exePath
+Out-File $latest -FilePath Join-Path $binPath ".kt-encabulator.version.txt"
 
 Write-Host -NoNewline "`nReady to go! " -ForegroundColor Green
 Write-Host -NoNewline "Execute with "
