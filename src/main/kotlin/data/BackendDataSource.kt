@@ -128,4 +128,20 @@ class BackendDataSource(terminal: Terminal, jargonLevel: JargonLevel, projectNam
         "api/v2/telemetry",
         "api/v2/content",
     )
+
+    override val processJargon: List<String> = listOf(
+        "user activity",
+        "database",
+        "log",
+        "API documentation"
+    )
+
+    override val processSubJargon: List<String> = listOf(
+        "database",
+        "business rule",
+        "transaction",
+        "schema validation",
+        "data transformation",
+    )
+
 }

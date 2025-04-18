@@ -12,6 +12,7 @@ import org.example.JargonLevel
 import org.example.info
 import org.example.warn
 import kotlin.math.min
+import kotlin.random.Random
 
 // TODO: Put better names, just added this to make code a bit clearer
 data class Process(val text: String, val suffix: String?)
@@ -31,7 +32,8 @@ abstract class DataSource(
     val tasks: List<suspend () -> Unit> = listOf(
         {codeAnalysis()},
         {monitorSystemResources()},
-        {analyzeAPIEndpoints()},
+        {analyzeData()},
+        {analyzeAPI()}
     )
 
     abstract val envType: String
@@ -46,7 +48,7 @@ abstract class DataSource(
 
         terminal.info(
             """
-            ${(TextColors.brightYellow + TextStyles.bold)("🖥️ - Initializing Development Environment")}
+            ${(TextColors.brightYellow + TextStyles.bold)("\uD83D\uDDA5\uFE0F - Initializing Development Environment")}
                 - Project: ${terminal.theme.success(projectName)}
                 - Environment: ${terminal.theme.success(envName ?: envType)}
                 
@@ -73,7 +75,7 @@ abstract class DataSource(
         }
 
         job.join()
-        println(" ")
+        terminal.println(" ")
     }
 
     abstract val classNamePrefix: List<String>
@@ -85,7 +87,7 @@ abstract class DataSource(
         get() = "${classNamePrefix.random()}${classNameSuffix.random()}.${fileExtension.random()}"
 
     suspend fun codeAnalysis() = coroutineScope {
-        terminal.info((TextColors.cyan + TextStyles.bold)("🔎 - Running Code Analysis on API Components"))
+        terminal.info((TextColors.cyan + TextStyles.bold)("\uD83D\uDD0E - Running Code Analysis on API Components"))
 
         val total = (5..26).random()
         val progress = progressBarLayout {
@@ -104,7 +106,11 @@ abstract class DataSource(
             val num = a.range.random()
             val (label, isGood) = a.labelFn(num)
 
-            terminal.println(" ${if(isGood) "✅" else "⚠️"} - $fileName - ${a.name}: $num${a.suffix} ($label)")
+            "${if(isGood) "✅" else "⚠️"} - $fileName - ${a.name}: $num${a.suffix} ($label)".also {
+                if (isGood) terminal.info(it)
+                else terminal.warn(it)
+            }
+
             delay((10..700).random().toLong())
             progress.advance(1)
         }
@@ -115,14 +121,14 @@ abstract class DataSource(
         fetchJargon()?.also { results.add(it) }
 
         job.join()
-        println(" ")
-        terminal.info(TextColors.cyan("📊 - Analysis Results: $total files, ${total * (200..2000).random()} lines of code"))
+        terminal.println(" ")
+        terminal.info(TextColors.cyan("\uD83D\uDCCA - Analysis Results: $total files, ${total * (200..2000).random()} lines of code"))
         for (r in results) println("    - $r")
-        println(" ")
+        terminal.println(" ")
     }
 
     suspend fun monitorSystemResources() = coroutineScope {
-        terminal.info((TextColors.brightMagenta + TextStyles.bold)("💽️ - Monitoring System Resources"))
+        terminal.info((TextColors.brightMagenta + TextStyles.bold)("\uD83D\uDCBD - Monitoring System Resources"))
 
         val progress = progressBarLayout {
             spinner(Spinner.Dots())
@@ -151,11 +157,11 @@ abstract class DataSource(
         }
 
         job.join()
-        println(" ")
+        terminal.println(" ")
 
         terminal.info(
             """
-            ${TextColors.cyan("📊 - Resource Utilization:")}
+            ${TextColors.cyan("\uD83D\uDCCA - Resource Utilization:")}
                 - Peak CPU: ${(0..100).random()}%
                 - Peak Memory: ${(0..100).random()}%
                 - Average Network Speed: ${(0..200).random()} MB/s
@@ -163,7 +169,7 @@ abstract class DataSource(
             """.trimIndent()
         )
 
-        println(" ")
+        terminal.println(" ")
     }
 
     val statusCodes: List<Int> = listOf(
@@ -174,8 +180,8 @@ abstract class DataSource(
     )
 
     abstract val apiEndpoints: List<String>
-    suspend fun analyzeAPIEndpoints() = coroutineScope{
-        terminal.info((TextColors.brightCyan + TextStyles.bold)("🕸️ - Analyzing API Traffic"))
+    suspend fun analyzeAPI() = coroutineScope {
+        terminal.info((TextColors.brightCyan + TextStyles.bold)("🕸️ - Analyzing API Endpoints"))
 
         val itr = apiEndpoints.shuffled().iterator()
         val maxPadding = apiEndpoints.max().length
@@ -222,10 +228,10 @@ abstract class DataSource(
         }
 
         job.join()
-        println(" ")
+        terminal.println(" ")
         terminal.info(
             """
-            ${TextColors.cyan("📊 - Network Activity Summary:")}
+            ${TextColors.cyan("\uD83D\uDCCA - Network Activity Summary:")}
                 - Total requests: ${(0..1000).random()}
                 - Average response time: ${(0..100).random()} ms
                 - Success rate: ${(0..100).random()}%
@@ -233,7 +239,78 @@ abstract class DataSource(
             """.trimIndent()
         )
 
-        println(" ")
+        terminal.println(" ")
     }
 
+    open val processingJargonPrefix: List<String> = listOf(
+        "Compressing",
+        "Migrating",
+        "Generating",
+        "Optimizing",
+        "Evaluating caches for",
+        "Processing",
+        "Executing",
+        "Evaluating",
+        "Applying"
+    )
+
+    open val processingJargonSuffix: List<String> = listOf(
+        "reports",
+        "indexes",
+        "transactions",
+        "replicas",
+    )
+
+    open val processingJargonSizes: List<String> = listOf("KB", "MB", "GB", "B")
+
+    abstract val processJargon: List<String>
+    abstract val processSubJargon: List<String>
+
+    suspend fun analyzeData() = coroutineScope {
+        terminal.info((TextColors.brightCyan + TextStyles.bold)("\uD83D\uDD03️ - Analyzing Data Traffic"))
+
+        val progress = progressBarLayout {
+            spinner(Spinner.Dots())
+            timeElapsed()
+            progressBar()
+            completed()
+            timeRemaining(style = terminal.theme.info)
+        }.animateInCoroutine(terminal)
+
+        progress.update { this.total = (2..10).random().toLong()}
+
+        val job = launch { progress.execute() }
+        while (!progress.finished) {
+            val title = processJargon.random()
+            val size = "(${(10..100).random()}${processingJargonSizes.random()})"
+            val suffix = "${(1000..5000).random()} ${processingJargonSuffix.random()}"
+
+            terminal.info("\uD83D\uDD03 ${processingJargonPrefix.random()} $title | $suffix $size")
+            for (i in 0..(0..10).random()) {
+                terminal.println(
+                    "   - ${processingJargonPrefix.random()} ${processSubJargon.random()} ${(mutableListOf("logic") + processingJargonSuffix).random()}"
+                )
+                delay((10..200).random().toLong())
+            }
+
+            if (Random.nextBoolean()) terminal.println(terminal.theme.success("   ✅ ${fetchJargon()}"))
+            delay((10..800).random().toLong())
+            progress.advance(1)
+        }
+
+        job.join()
+        terminal.println(" ")
+
+        terminal.info(
+            """
+            ${TextColors.cyan("\uD83D\uDCCA - Data Processing Summary:")}
+                - Records processed: ${(2500..10000).random()}
+                - Processing rate: ${(100..5000).random()} records/sec
+                - Total data size: ${(15..300).random()} ${processingJargonSizes.random()}
+                - Estimated time saved: ${(25..100).random()} minutes
+                - ${fetchJargon()}
+        
+            """.trimIndent()
+        )
+    }
 }
